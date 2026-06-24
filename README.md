@@ -114,6 +114,67 @@ when you change `lily58_dongle.keymap`. You only need to reflash the
 left/right halves if you change settings in `lily58.conf` (or other files
 that affect their hardware config).
 
+## Using a Second Computer (e.g. a Mac) Without Removing the Dongle
+
+You don't need to touch the dongle or reflash anything to also use this
+keyboard with a second computer over plain Bluetooth — the dongle itself
+can hold up to 5 separate Bluetooth profiles, completely independent from
+its connection to your two keyboard halves. One profile can be your Mac;
+USB (through the dongle, into your PC) is treated as a separate "output"
+on top of that.
+
+**One-time setup, on the Mac:**
+
+1. Leave the dongle plugged into your PC as usual.
+2. On the keyboard, hold **LOWER** and tap **BT1** (top-left key of the
+   lower layer) to select Bluetooth profile 0. The dongle starts
+   advertising over Bluetooth.
+3. On your Mac, open Bluetooth settings and pair with "Lily58 Dongle".
+4. Hold **LOWER** and tap **OUTTOG** (top row, first key on the right
+   half) to switch the active output to Bluetooth. Your Mac should now
+   receive keystrokes.
+
+**Every time after that**, switching between the two computers is just:
+
+- **LOWER + OUTTOG** — toggles between USB (your PC) and the current
+  Bluetooth profile (your Mac). Both stay paired/bonded, so this is instant.
+
+If you ever want to pair a third device, repeat the same steps with
+**BT2** and a free profile slot.
+
+Reference: [ZMK Bluetooth behavior](https://zmk.dev/docs/keymaps/behaviors/bluetooth) ·
+[ZMK Output Selection behavior](https://zmk.dev/docs/keymaps/behaviors/outputs)
+
+## Using ZMK Studio
+
+[ZMK Studio](https://zmk.dev/docs/features/studio) lets you change your
+keymap live, without rebuilding/reflashing firmware. It's already enabled
+in this config — only on the dongle, since the dongle is the central that
+runs keymap logic.
+
+1. Connect the dongle to your computer (the same way you normally would —
+   USB into your PC, or paired over Bluetooth as described above).
+2. On the keyboard, **hold LOWER and tap STUDIO** (next to OUTTOG on the
+   lower layer) to unlock Studio access. It stays unlocked until a period
+   of inactivity or disconnect.
+3. Open [zmk.studio](https://zmk.studio/) in Chrome/Edge, or download the
+   [native app](https://zmk.studio/download) for Windows/macOS/Linux, and
+   connect to your keyboard.
+4. Make your changes in the Studio UI — they apply immediately, no reflash.
+
+A few things worth knowing:
+
+- **Connect over whichever endpoint (USB or BLE) you currently have
+  selected with OUTTOG** — Studio needs to talk over the same connection
+  your keystrokes are using.
+- Once you've made changes via Studio, **don't edit `lily58_dongle.keymap`
+  and re-push** unless you also do a "Restore Stock Settings" in the
+  Studio app first — otherwise your file-based changes won't take effect
+  over the Studio-managed keymap.
+- Studio only manages the **dongle's** firmware; you still flash
+  `lily58_left.uf2` / `lily58_right.uf2` normally for any hardware-level
+  changes to the halves (`lily58.conf`, etc.).
+
 ## Troubleshooting
 
 - **Halves won't pair with the dongle / pair with each other instead:**
@@ -124,6 +185,11 @@ that affect their hardware config).
 - **Build fails on GitHub Actions:** check the Actions log for the specific
   error; the [Building Issues](https://zmk.dev/docs/troubleshooting/building-issues)
   page covers common causes.
+- **ZMK Studio doesn't see the keyboard:** make sure you tapped
+  LOWER+STUDIO to unlock it, and that Studio is connecting over the same
+  endpoint (USB or BLE) selected by OUTTOG. On Linux, USB serial access
+  may need a permissions fix (e.g. adding your user to the `dialout` or
+  `uucp` group).
 - More general help: [ZMK Troubleshooting docs](https://zmk.dev/docs/troubleshooting) ·
   [ZMK Discord](https://zmk.dev/community/discord/invite)
 

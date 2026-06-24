@@ -10,6 +10,11 @@
 #
 # After the very first flash (with settings_reset), reflash all three
 # boards with the firmware below and they'll pair automatically.
+#
+# ZMK Studio: enabled on the dongle only (it's the central — keymap logic
+# always lives there). Requires the studio-rpc-usb-uart snippet and
+# CONFIG_ZMK_STUDIO=y. The left/right halves don't need either, since
+# they're just peripherals relaying key events.
 
 # Note on board names: as of the Zephyr 4.1 update (Dec 2025), every ZMK
 # board now requires an explicit "zmk" variant suffix, written as //zmk
@@ -23,6 +28,8 @@
 include:
   - board: nice_nano//zmk
     shield: lily58_dongle
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_STUDIO=y
 
   - board: nice_nano//zmk
     shield: lily58_left
