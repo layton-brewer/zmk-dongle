@@ -1,0 +1,36 @@
+---
+# This builds firmware for:
+#   1. The dongle (nice!nano, plugged into your PC via USB) — acts as the
+#      BLE "central". This is the file you'll see your computer connect to.
+#   2. The Lily58 left half (nice!nano) — now a peripheral, talks only to
+#      the dongle over BLE.
+#   3. The Lily58 right half (nice!nano) — also a peripheral.
+#   4. A settings_reset firmware, used once to clear old pairing data from
+#      all three controllers when you first switch to this dongle setup.
+#
+# After the very first flash (with settings_reset), reflash all three
+# boards with the firmware below and they'll pair automatically.
+
+# Note on board names: as of the Zephyr 4.1 update (Dec 2025), every ZMK
+# board now requires an explicit "zmk" variant suffix, written as //zmk
+# (shorthand for the full @revision/soc/zmk form). Plain "nice_nano" is
+# just the bare Zephyr board and is NOT set up for ZMK — you'll get a
+# "board is not set up for ZMK" error without the suffix.
+#
+# "nice_nano//zmk" = nice_nano@2.0.0/nrf52840/zmk (the v2 board, ZMK variant)
+# If you actually have an original nice!nano v1, use "nice_nano@1//zmk" instead.
+
+include:
+  - board: nice_nano//zmk
+    shield: lily58_dongle
+
+  - board: nice_nano//zmk
+    shield: lily58_left
+    cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+
+  - board: nice_nano//zmk
+    shield: lily58_right
+    cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+
+  - board: nice_nano//zmk
+    shield: settings_reset

@@ -1,0 +1,6 @@
+.west/
+build/
+firmware/
+*.uf2
+*.hex
+.DS_Store
